@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }}</title>
+</head>
+<body>
+
+    <h1>{{ post.title }}</h1>
+
+    <p>
+        Категория: {{ post.category.name }}
+    </p>
+
+    <p>
+        Цена: {{ post.price }}
+    </p>
+
+    <p>
+        Описание: {{ post.description }}
+    </p>
+
+    {% if post.oblojka %}
+        <img
+            src="{{ post.oblojka.url }}"
+            width="300"
+            alt="{{ post.title }}"
+        >
+    {% endif %}
+
+    {% if post.video %}
+        <br><br>
+
+        <video width="500" controls>
+            <source src="{{ post.video.url }}">
+        </video>
+    {% endif %}
+
+    <p>
+        Опубликовано:
+        {{ post.cr_at|date:"d.m.Y H:i" }}
+    </p>
+
+    <p>
+        Автор:
+        {{ post.owner.username }}
+    </p>
+
+    <hr>
+
+    {% if user == post.owner %}
+
+        <a href="{% url 'post_delete' post.pk %}">
+            <button type="button">
+                Delete
+            </button>
+        </a>
+
+    {% endif %}
+
+    <br><br>
+
+    <a href="{% url 'home' %}">
+        <button type="button">
+            Home
+        </button>
+    </a>
+
+</body>
+</html>

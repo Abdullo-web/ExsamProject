@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Details</title>
+</head>
+<body>
+
+    <h1>Profile Details</h1>
+    <br>
+
+    <h1>{{ profile.nik_profile }}</h1>
+    <br>
+
+    <p>Телефон: {{ profile.phone }}</p>
+    <br>
+
+    <p>{{ profile.bio }}</p>
+    <br>
+
+    {% if profile.avatar %}
+        <a href="{{ profile.avatar.url }}" target="_blank">
+            <img src="{{ profile.avatar.url }}"
+                 width="150"
+                 height="150"
+                 style="object-fit: cover; cursor: pointer;">
+        </a>
+    {% endif %}
+
+    <br><br>
+
+    <a href="{% url 'home' %}">
+        <button type="button">Home</button>
+    </a>
+
+    <a href="{% url 'home' %}">
+        <button type="button">Posts</button>
+    </a>
+
+    <a href="{% url 'post_create' %}">
+        <button type="button">Create Post</button>
+    </a>
+
+    <form method="post" action="{% url 'profile_update' %}">
+        {% csrf_token %}
+        <button type="submit">Update Profile</button>
+    </form>
+
+    <a href="{% url 'profile_detail' %}">
+        <button type="button">Profile Details</button>
+    </a>
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+
+</body>
+</html>
