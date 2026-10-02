@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль {{ profile.owner.username }}</title>
+</head>
+<body>
+
+    <h1>Профиль пользователя</h1>
+
+    {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" width="200">
+    {% endif %}
+
+    <h2>{{ profile.nik_profile }}</h2>
+
+    <p>Username: {{ profile.owner.username }}</p>
+
+    <p>Телефон: {{ profile.phone }}</p>
+
+    <p>О себе: {{ profile.bio }}</p>
+
+    <p>
+        Дата создания:
+        {{ profile.cr_at|date:"d.m.Y" }}
+    </p>
+
+    <hr>
+
+
+<h2>Объявления пользователя</h2>
+<p>
+    Количество объявлений: {{ user_posts.count }}
+</p>
+{% for post in user_posts %}
+
+    <h3>
+        <a href="{% url 'post_detail' post.pk %}">
+            {{ post.title }}
+        </a>
+    </h3>
+
+    <p>Цена: {{ post.price }}</p>
+
+    <p>Категория: {{ post.category.name }}</p>
+
+    <p>Город: {{ post.city }}</p>
+
+    <p>
+        Опубликовано:
+        {{ post.cr_at|date:"d.m.Y H:i" }}
+    </p>
+
+    {% if post.oblojka %}
+        <img src="{{ post.oblojka.url }}" width="250">
+    {% endif %}
+
+    <hr>
+
+{% empty %}
+
+    <p>У этого пользователя пока нет объявлений.</p>
+
+{% endfor %}
+
+    <a href="{% url 'home' %}">Главная</a>
+
+</body>
+</html>

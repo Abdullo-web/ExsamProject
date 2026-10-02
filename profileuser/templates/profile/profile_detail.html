@@ -1,60 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Details</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile Details</title>
 </head>
 <body>
+<h1>Profile Details</h1> <br>
 
-    <h1>Profile Details</h1>
+<h1>{{ profile.nik_profile }}</h1> <br>
+
+<p>Телефон: {{ profile.phone }}</p> <br>
+
+<p>{{ profile.bio }}</p> <br>
+
+{% if profile.avatar %}
+<a href="{{ profile.avatar.url }}" target="_blank">
+<img src="{{ profile.avatar.url }}"
+width="150"
+height="150"
+style="object-fit: cover; cursor: pointer;">
+</a>
+{% endif %} <br>
+
+<br>
+<!-- Отдельная кнопка создания поста -->
+<a href="{% url 'post_create' %}">
+<button type="button">Create Post</button>
+</a>
+<br><br>
+
+<a href="{% url 'home' %}"><button type="button">home Glavni</button></a>
+
+<form method="post" action="{% url 'logout' %}" style="display:inline;">
+{% csrf_token %}
+<button type="submit">Logout</button>
+</form>
+
+<a href="{% url 'profile_update' %}"><button type="button">Update Profile</button></a>
+
+<hr>
+
+<h2>Мои посты</h2>
+
+{% for post in user_posts %}
+<div>
+    {% if post.oblojka %}
+    <img src="{{ post.oblojka.url }}" width="100" alt="{{ post.title }}">
     <br>
-
-    <h1>{{ profile.nik_profile }}</h1>
-    <br>
-
-    <p>Телефон: {{ profile.phone }}</p>
-    <br>
-
-    <p>{{ profile.bio }}</p>
-    <br>
-
-    {% if profile.avatar %}
-        <a href="{{ profile.avatar.url }}" target="_blank">
-            <img src="{{ profile.avatar.url }}"
-                 width="150"
-                 height="150"
-                 style="object-fit: cover; cursor: pointer;">
-        </a>
     {% endif %}
 
-    <br><br>
+    <h3>{{ post.title }}</h3>
+    <p>Цена: {{ post.price }}</p>
+    <p>Опубликовано: {{ post.cr_at|date:"d.m.Y H:i" }}</p>
 
-    <a href="{% url 'home' %}">
-        <button type="button">Home</button>
+    <!-- Кнопки управления для каждого своего поста -->
+    <a href="{% url 'post_detail' post.pk %}">
+        <button type="button">Detail</button>
     </a>
 
-    <a href="{% url 'home' %}">
-        <button type="button">Posts</button>
+    <a href="{% url 'post_update' post.pk %}">
+        <button type="button">Update</button>
     </a>
 
-    <a href="{% url 'post_create' %}">
-        <button type="button">Create Post</button>
+    <a href="{% url 'post_delete' post.pk %}">
+        <button type="button">Delete</button>
     </a>
 
-    <form method="post" action="{% url 'profile_update' %}">
-        {% csrf_token %}
-        <button type="submit">Update Profile</button>
-    </form>
-
-    <a href="{% url 'profile_detail' %}">
-        <button type="button">Profile Details</button>
-    </a>
-
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
+</div>
+<hr>
+{% empty %}
+<p>У вас пока нет постов.</p>
+{% endfor %}
 
 </body>
 </html>

@@ -4,7 +4,7 @@ from .models import Profile
 from .forms import *
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from marketplace.models import Post
 class ProfileCreate(LoginRequiredMixin,CreateView):
     model = Profile
     form_class = ProfileCreateForm
@@ -38,6 +38,10 @@ class ProfileDetail(LoginRequiredMixin,DetailView):
     def get_object(self, queryset =None):
         return self.request.user.profile_user
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_posts'] = self.request.user.post_set.all().order_by('-cr_at')
+        return context
     
 class PublicProfileDetail(DetailView):
     model = Profile
@@ -47,7 +51,15 @@ class PublicProfileDetail(DetailView):
     def get_object(self, queryset=None):
         return get_object_or_404(Profile,owner_id=self.kwargs['pk'])
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
+        context['user_posts'] = Post.objects.filter(owner=self.object.owner).order_by('-cr_at')
+
+        return context
+    
+
+    
   
 
     

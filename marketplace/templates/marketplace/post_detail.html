@@ -42,9 +42,31 @@
     </p>
 
     <p>
-        Автор:
+    Автор:
+    <a href="{% url 'public_profile' post.owner.pk %}">
         {{ post.owner.username }}
-    </p>
+    </a>
+</p>
+{% if user.is_authenticated %}
+    <form method="post" action="{% url 'favorite' post.pk %}">
+        {% csrf_token %}
+
+        {% if is_favorite %}
+            <button type="submit">
+                💔 Убрать из избранного
+            </button>
+        {% else %}
+            <button type="submit">
+                ❤️ Добавить в избранное
+            </button>
+        {% endif %}
+    </form>
+{% endif %}
+<a href="tel:{{ post.owner.profile_user.phone }}">
+    <button type="button">
+        📞 Позвонить
+    </button>
+</a>
 
     <hr>
 
@@ -57,6 +79,13 @@
         </a>
 
     {% endif %}
+
+    {% if user.is_authenticated and user != post.owner %}
+    <a href="{% url 'chat' post.pk post.owner.pk %}">
+    <button type="button">💬 Написать продавцу</button>
+</a>
+{% endif %}
+
 
     <br><br>
 

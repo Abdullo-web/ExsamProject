@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Список постов</title>
+</head>
+<body>
+
+<h1>Все посты</h1>
+
+<br>
+<a href="{% url 'post_create' %}">
+<button type="button">Создать новый пост</button>
+</a>
+
+<br><br>
+<a href="{% url 'home' %}">
+<button type="button">Home</button>
+</a>
+
+<hr>
+
+{% for post in posts %}
+<div>
+    <h3>
+        <a href="{% url 'post_detail' post.pk %}">
+            {{ post.title }}
+        </a>
+    </h3>
+    <p>Категория: {{ post.category.name }}</p>
+    <p>Цена: {{ post.price }}</p>
+    <p>Автор: {{ post.owner.username }}</p>
+    <p>Опубликовано: {{ post.cr_at|date:"d.m.Y H:i" }}</p>
+    <hr>
+</div>
+{% empty %}
+<p>Постов пока нет.</p>
+{% endfor %}
+
+</body>
+</html>

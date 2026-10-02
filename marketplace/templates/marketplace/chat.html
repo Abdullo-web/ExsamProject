@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Чат — {{ post.title }}</title>
+</head>
+<body>
+
+    <h1>Чат</h1>
+
+    <h2>
+        Объявление:
+        <a href="{% url 'post_detail' post.pk %}">
+            {{ post.title }}
+        </a>
+    </h2>
+
+    <p>Продавец: {{ post.owner.username }}</p>
+
+    <hr>
+
+    <h3>Сообщения</h3>
+
+    {% for message in messages %}
+
+        <p>
+            <strong>{{ message.sender.username }}</strong>
+            <small>
+                {{ message.cr_at|date:"d.m.Y H:i" }}
+            </small>
+        </p>
+
+        <p>
+            {{ message.text }}
+        </p>
+
+        <hr>
+
+    {% empty %}
+
+        <p>Сообщений пока нет.</p>
+
+    {% endfor %}
+
+
+    <h3>Новое сообщение</h3>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Отправить
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{% url 'post_detail' post.pk %}">
+        Вернуться к объявлению
+    </a>
+
+</body>
+</html>

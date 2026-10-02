@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои сообщения</title>
+</head>
+<body>
+
+    <h1>Мои сообщения</h1>
+
+    {% for message in messages %}
+
+        <div>
+
+            <h3>
+                {{ message.sender.username }}
+            </h3>
+
+            <p>
+                Объявление:
+                {{ message.post.title }}
+            </p>
+
+            <p>
+                {{ message.text }}
+            </p>
+
+            <small>
+                {{ message.cr_at|date:"d.m.Y H:i" }}
+            </small>
+
+            <br><br>
+
+            <a href="{% url 'chat' message.post.pk message.sender.pk %}">
+                Открыть чат
+            </a>
+
+        </div>
+
+        <hr>
+
+    {% empty %}
+
+        <p>Сообщений пока нет.</p>
+
+    {% endfor %}
+
+</body>
+</html>

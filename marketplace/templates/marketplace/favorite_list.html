@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Избранное</title>
+</head>
+<body>
+
+    <h1>Мои избранные объявления</h1>
+
+    {% for favorite in favorites %}
+
+    <h2>
+        <a href="{% url 'post_detail' favorite.post.pk %}">
+            {{ favorite.post.title }}
+        </a>
+    </h2>
+
+    <p>Цена: {{ favorite.post.price }}</p>
+
+    <p>Категория: {{ favorite.post.category.name }}</p>
+
+    <p>Город: {{ favorite.post.city }}</p>
+
+    <p>
+        Добавлено:
+        {{ favorite.cr_at|date:"d.m.Y H:i" }}
+    </p>
+
+    <form method="post" action="{% url 'favorite' favorite.post.pk %}">
+        {% csrf_token %}
+
+        <button type="submit">
+            💔 Убрать из избранного
+        </button>
+    </form>
+
+    <hr>
+
+{% empty %}
+
+    <p>У вас пока нет избранных объявлений.</p>
+
+{% endfor %}
+
+</body>
+</html>
