@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Уведомления
+    </title>
+
+</head>
+
+<body>
+
+    <h1>
+        Уведомления
+    </h1>
+
+
+    {% for notification in notifications %}
+
+        <div>
+
+            <p>
+                🔔
+                {{ notification.text }}
+            </p>
+
+            <small>
+                {{ notification.cr_at|date:"d.m.Y H:i" }}
+            </small>
+
+            <br>
+
+            <a href="{% url 'chat' notification.message.post.pk notification.sender.pk %}">
+                Открыть чат
+            </a>
+
+        </div>
+
+        <hr>
+
+    {% empty %}
+
+        <p>
+            У вас пока нет уведомлений.
+        </p>
+
+    {% endfor %}
+
+
+    <a href="{% url 'post_list' %}">
+        Вернуться к объявлениям
+    </a>
+
+</body>
+
+</html>

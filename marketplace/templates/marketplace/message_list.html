@@ -2,36 +2,70 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Мои сообщения</title>
+    <title>Мои чаты</title>
 </head>
 <body>
 
-    <h1>Мои сообщения</h1>
+    <h1>Мои чаты</h1>
 
-    {% for message in messages %}
+    {% for chat in chats %}
 
         <div>
 
+            <!-- Аватар пользователя -->
+            {% if chat.user.profile_user.avatar %}
+
+                <img
+                    src="{{ chat.user.profile_user.avatar.url }}"
+                    width="70"
+                    height="70"
+                    alt="Аватар"
+                >
+
+            {% else %}
+
+                <div>
+                    Аватара нет
+                </div>
+
+            {% endif %}
+
+
+            <!-- Имя пользователя -->
             <h3>
-                {{ message.sender.username }}
+                {{ chat.user.username }}
             </h3>
 
+            {% if chat.unread_count > 0 %}
+    <p>
+        Непрочитанных сообщений: {{ chat.unread_count }}
+    </p>
+{% endif %}
+
+            <!-- Объявление -->
             <p>
                 Объявление:
-                {{ message.post.title }}
+                <strong>{{ chat.post.title }}</strong>
             </p>
 
+
+            <!-- Последнее сообщение -->
             <p>
-                {{ message.text }}
+                {{ chat.last_message.text }}
             </p>
 
+
+            <!-- Время -->
             <small>
-                {{ message.cr_at|date:"d.m.Y H:i" }}
+                {{ chat.last_message.cr_at|date:"d.m.Y H:i" }}
             </small>
+
 
             <br><br>
 
-            <a href="{% url 'chat' message.post.pk message.sender.pk %}">
+
+            <!-- Открыть чат -->
+            <a href="{% url 'chat' chat.post.pk chat.user.pk %}">
                 Открыть чат
             </a>
 
@@ -41,7 +75,9 @@
 
     {% empty %}
 
-        <p>Сообщений пока нет.</p>
+        <p>
+            У вас пока нет сообщений.
+        </p>
 
     {% endfor %}
 

@@ -28,6 +28,13 @@
     </a>
 {% endif %}
 
+<a href="{% url 'notification_list' %}">
+    🔔 Уведомления
+    {% if unread_notifications_count > 0 %}
+        ({{ unread_notifications_count }})
+    {% endif %}
+</a>
+
 <a href="{% url 'message_list' %}">
     💬 Мои сообщения
 </a>

@@ -20,6 +20,7 @@ class Post(models.Model):
     price = models.IntegerField()
     cr_at = models.DateTimeField(auto_now_add=True)
     city = models.CharField(max_length=100)
+    views = models.PositiveIntegerField(default=0)
     
     def __str__(self):
         return self.title
@@ -47,6 +48,33 @@ class Message(models.Model):
     post = models.ForeignKey(Post,on_delete=models.CASCADE,related_name='messages')
     text = models.TextField()
     cr_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.sender.username} -> {self.receiver.username}'
+    
+    
+    
+class PostView(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name='post_views')
+    user = models.ForeignKey(UserRegister, on_delete=models.CASCADE)
+    cr_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['post', 'user'],
+                name='unique_post_view'
+            )
+        ]
+        
+        
+class Notification(models.Model):
+    user = models.ForeignKey(UserRegister,on_delete=models.CASCADE,related_name='notifications_user')
+    sender = models.ForeignKey(UserRegister,on_delete=models.CASCADE,related_name='sent_notifications')
+    message = models.ForeignKey(Message,on_delete=models.CASCADE,related_name='notification_message')
+    text = models.CharField(max_length=255)
+    is_read = models.BooleanField(default=False)
+    cr_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f'Notification for {self.user.username}'

@@ -42,6 +42,10 @@
     </p>
 
     <p>
+    👁 {{ post.views }} просмотров
+</p>
+
+    <p>
     Автор:
     <a href="{% url 'public_profile' post.owner.pk %}">
         {{ post.owner.username }}

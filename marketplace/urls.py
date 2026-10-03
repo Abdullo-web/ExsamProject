@@ -13,4 +13,5 @@ urlpatterns = [
     path('favorites/',FavoriteList.as_view(),name='favorite_list'),
     path('posts/<int:pk>/chat/<int:user_id>/',ChatView.as_view(),name='chat'),
     path('messages/',MessageListView.as_view(),name='message_list'),
+    path('notifications/',NotificationListView.as_view(),name='notification_list'),
 ]

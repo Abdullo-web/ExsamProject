@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'register',
     'profileuser',
     'home',
-    'marketplace',
+    'marketplace.apps.MarketplaceConfig',
 ]
 
 MIDDLEWARE = [
