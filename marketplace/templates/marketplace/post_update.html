@@ -1,26 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>Update Post</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактировать объявление — MarketPlace</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'marketplace/style.css' %}">
 </head>
 <body>
 
-<h1>Update Post</h1>
+<header class="site-header">
+    <div class="container header-inner">
 
-<form method="post" enctype="multipart/form-data">
-{% csrf_token %}
+        <a href="{% url 'home' %}" class="logo">
+            Market<span>Place</span>
+        </a>
 
-{{ form.as_p }}
+        <nav class="nav">
+            <a href="{% url 'home' %}">Главная</a>
+            <a href="{% url 'favorite_list' %}">
+                ❤️ Избранное
+            </a>
+            <a href="{% url 'message_list' %}">
+                💬 Сообщения
+            </a>
+            <a href="{% url 'notification_list' %}">
+                🔔 Уведомления
+            </a>
+            <a href="{% url 'profile_detail' %}">
+                Профиль
+            </a>
+        </nav>
 
-<button type="submit">Save Changes</button>
-</form>
+    </div>
+</header>
 
-<br>
+<main class="page">
+    <div class="container">
 
-<a href="{% url 'post_detail' object.pk %}">
-<button type="button">Cancel</button>
-</a>
+        <div class="back-button">
+            <button
+                type="button"
+                class="button button-light"
+                onclick="if (document.referrer) { history.back(); } else { window.location.href='{% url 'post_detail' object.pk %}'; }"
+            >
+                ← Назад
+            </button>
+        </div>
+
+        <div class="card form-card">
+
+            <h1>Редактировать объявление</h1>
+
+            <p>
+                Измените информацию об объявлении.
+            </p>
+
+            <form method="post" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="button button-primary"
+                    >
+                        Сохранить изменения
+                    </button>
+
+                    <a
+                        href="{% url 'post_detail' object.pk %}"
+                        class="button button-light"
+                    >
+                        Отмена
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</main>
 
 </body>
 </html>

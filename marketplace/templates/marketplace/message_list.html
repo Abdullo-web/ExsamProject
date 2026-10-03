@@ -2,84 +2,155 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Мои чаты</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сообщения — MarketPlace</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'marketplace/style.css' %}">
 </head>
 <body>
 
-    <h1>Мои чаты</h1>
+<header class="site-header">
+    <div class="container header-inner">
 
-    {% for chat in chats %}
+        <a href="{% url 'home' %}" class="logo">
+            Market<span>Place</span>
+        </a>
 
-        <div>
+        <nav class="nav">
 
-            <!-- Аватар пользователя -->
-            {% if chat.user.profile_user.avatar %}
-
-                <img
-                    src="{{ chat.user.profile_user.avatar.url }}"
-                    width="70"
-                    height="70"
-                    alt="Аватар"
-                >
-
-            {% else %}
-
-                <div>
-                    Аватара нет
-                </div>
-
-            {% endif %}
-
-
-            <!-- Имя пользователя -->
-            <h3>
-                {{ chat.user.username }}
-            </h3>
-
-            {% if chat.unread_count > 0 %}
-    <p>
-        Непрочитанных сообщений: {{ chat.unread_count }}
-    </p>
-{% endif %}
-
-            <!-- Объявление -->
-            <p>
-                Объявление:
-                <strong>{{ chat.post.title }}</strong>
-            </p>
-
-
-            <!-- Последнее сообщение -->
-            <p>
-                {{ chat.last_message.text }}
-            </p>
-
-
-            <!-- Время -->
-            <small>
-                {{ chat.last_message.cr_at|date:"d.m.Y H:i" }}
-            </small>
-
-
-            <br><br>
-
-
-            <!-- Открыть чат -->
-            <a href="{% url 'chat' chat.post.pk chat.user.pk %}">
-                Открыть чат
+            <a href="{% url 'home' %}">
+                Главная
             </a>
+
+            <a href="{% url 'post_create' %}">
+                + Объявление
+            </a>
+
+            <a href="{% url 'favorite_list' %}">
+                ❤️ Избранное
+            </a>
+
+            <a href="{% url 'notification_list' %}">
+                🔔 Уведомления
+            </a>
+
+            <a href="{% url 'profile_detail' %}">
+                Профиль
+            </a>
+
+        </nav>
+
+    </div>
+</header>
+
+<main class="page">
+
+    <div class="container">
+
+        <div class="back-button">
+
+            <button
+                type="button"
+                class="button button-light"
+                onclick="if (document.referrer) { history.back(); } else { window.location.href='{% url 'home' %}'; }"
+            >
+                ← Назад
+            </button>
 
         </div>
 
-        <hr>
+        <div class="page-head">
 
-    {% empty %}
+            <div>
+                <h1>💬 Мои сообщения</h1>
+                <p>Ваши переписки с пользователями.</p>
+            </div>
 
-        <p>
-            У вас пока нет сообщений.
-        </p>
+        </div>
 
-    {% endfor %}
+        {% for chat in chats %}
+
+            <a
+                href="{% url 'chat' chat.post.pk chat.user.pk %}"
+                class="chat-card {% if chat.unread_count > 0 %}unread{% endif %}"
+            >
+
+                <div class="chat-avatar">
+
+                    {% if chat.user.profile_user.avatar %}
+
+                        <img
+                            src="{{ chat.user.profile_user.avatar.url }}"
+                            alt="{{ chat.user.username }}"
+                        >
+
+                    {% else %}
+
+                        {{ chat.user.username|first|upper }}
+
+                    {% endif %}
+
+                </div>
+
+                <div class="chat-main">
+
+                    <h3>
+                        {{ chat.user.username }}
+                    </h3>
+
+                    <div class="chat-post">
+                        {{ chat.post.title }}
+                    </div>
+
+                    <div class="chat-last">
+                        {{ chat.last_message.text }}
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="chat-time">
+                        {{ chat.last_message.cr_at|date:"d.m.Y H:i" }}
+                    </div>
+
+                    {% if chat.unread_count > 0 %}
+
+                        <div class="unread-count">
+                            {{ chat.unread_count }} новых
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </a>
+
+        {% empty %}
+
+            <div class="empty">
+
+                <h3>Сообщений пока нет</h3>
+
+                <p>
+                    Когда вы начнёте общение с продавцом или покупателем,
+                    здесь появятся ваши чаты.
+                </p>
+
+                <a
+                    href="{% url 'home' %}"
+                    class="button button-primary"
+                >
+                    Найти объявление
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</main>
 
 </body>
 </html>

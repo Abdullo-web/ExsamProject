@@ -2,65 +2,141 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Чат — {{ post.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат — MarketPlace</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'marketplace/style.css' %}">
 </head>
 <body>
 
-    <h1>Чат</h1>
+<header class="site-header">
+    <div class="container header-inner">
 
-    <h2>
-        Объявление:
-        <a href="{% url 'post_detail' post.pk %}">
-            {{ post.title }}
+        <a href="{% url 'home' %}" class="logo">
+            Market<span>Place</span>
         </a>
-    </h2>
-<p>
-    Пользователь: {{ other_user.username }}
-</p>
 
-    <h3>Сообщения</h3>
+        <nav class="nav">
 
-    {% for message in messages %}
+            <a href="{% url 'home' %}">
+                Главная
+            </a>
 
-        <p>
-            <strong>{{ message.sender.username }}</strong>
-            <small>
-                {{ message.cr_at|date:"d.m.Y H:i" }}
-            </small>
-        </p>
+            <a href="{% url 'message_list' %}">
+                💬 Сообщения
+            </a>
 
-        <p>
-            {{ message.text }}
-        </p>
+            <a href="{% url 'favorite_list' %}">
+                ❤️ Избранное
+            </a>
 
-        <hr>
+            <a href="{% url 'notification_list' %}">
+                🔔 Уведомления
+            </a>
 
-    {% empty %}
+            <a href="{% url 'profile_detail' %}">
+                Профиль
+            </a>
 
-        <p>Сообщений пока нет.</p>
+        </nav>
 
-    {% endfor %}
+    </div>
+</header>
 
+<main class="page">
 
-    <h3>Новое сообщение</h3>
+    <div class="container">
 
-    <form method="post">
+        <div class="chat-box">
 
-        {% csrf_token %}
+            <div class="back-button">
 
-        {{ form.as_p }}
+                <button
+                    type="button"
+                    class="button button-light"
+                    onclick="if (document.referrer) { history.back(); } else { window.location.href='{% url 'post_detail' post.pk %}'; }"
+                >
+                    ← Назад
+                </button>
 
-        <button type="submit">
-            Отправить
-        </button>
+            </div>
 
-    </form>
+            <div class="chat-header">
 
-    <br>
+                <h1>
+                    💬 {{ other_user.username }}
+                </h1>
 
-    <a href="{% url 'post_detail' post.pk %}">
-        Вернуться к объявлению
-    </a>
+                <p>
+                    Объявление:
+                    <a
+                        href="{% url 'post_detail' post.pk %}"
+                        class="owner-link"
+                    >
+                        {{ post.title }}
+                    </a>
+                </p>
+
+            </div>
+
+            <div class="messages">
+
+                {% for message in messages %}
+
+                    <div class="message-row {% if message.sender == user %}mine{% endif %}">
+
+                        <div class="message-bubble">
+
+                            <div class="message-author">
+                                {{ message.sender.username }}
+                            </div>
+
+                            <div>
+                                {{ message.text|linebreaksbr }}
+                            </div>
+
+                            <span class="message-time">
+                                {{ message.cr_at|date:"d.m.Y H:i" }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="empty">
+                        Сообщений пока нет. Напишите первое сообщение.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="chat-form">
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+
+                    <button
+                        type="submit"
+                        class="button button-primary"
+                    >
+                        Отправить сообщение
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
 
 </body>
 </html>

@@ -1,29 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Post</title>
+    <title>Создать объявление — MarketPlace</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'marketplace/style.css' %}">
 </head>
 <body>
 
-    <h1>Create Post</h1>
+<header class="site-header">
+    <div class="container header-inner">
+        <a href="{% url 'home' %}" class="logo">
+            Market<span>Place</span>
+        </a>
 
-    <form method="post" enctype="multipart/form-data">
+        <nav class="nav">
+            <a href="{% url 'home' %}">Главная</a>
+            <a href="{% url 'favorite_list' %}">
+                ❤️ Избранное
+                <span class="badge">{{ user.favorites_user.count }}</span>
+            </a>
+            <a href="{% url 'message_list' %}">💬 Сообщения</a>
+            <a href="{% url 'notification_list' %}">🔔 Уведомления</a>
 
-        {% csrf_token %}
+            {% if user.profile_user %}
+                <a href="{% url 'profile_detail' %}">Профиль</a>
+            {% else %}
+                <a href="{% url 'profile_create' %}">Создать профиль</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
 
-        {{ form.as_p }}
+<main class="page">
+    <div class="container">
 
-        <button type="submit">Create Post</button>
+        <div class="back-button">
+            <button
+                type="button"
+                class="button button-light"
+                onclick="if (document.referrer) { history.back(); } else { window.location.href='{% url 'home' %}'; }"
+            >
+                ← Назад
+            </button>
+        </div>
 
-    </form>
+        <div class="card form-card">
 
-    <br>
+            <h1>Создать объявление</h1>
 
-    <a href="{% url 'home' %}">
-        <button type="button">Home</button>
-    </a>
+            <p>
+                Добавьте товар или услугу, которую хотите продать.
+            </p>
+
+            <form method="post" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="button button-primary"
+                    >
+                        Опубликовать объявление
+                    </button>
+
+                    <button
+                        type="button"
+                        class="button button-light"
+                        onclick="if (document.referrer) { history.back(); } else { window.location.href='{% url 'home' %}'; }"
+                    >
+                        Отмена
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</main>
 
 </body>
 </html>

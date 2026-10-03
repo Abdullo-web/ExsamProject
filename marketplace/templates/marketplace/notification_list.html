@@ -1,59 +1,111 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <title>
-        Уведомления
-    </title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Уведомления — MarketPlace</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'marketplace/style.css' %}">
 </head>
-
 <body>
 
-    <h1>
-        Уведомления
-    </h1>
+<header class="site-header">
+    <div class="container header-inner">
 
+        <a href="{% url 'home' %}" class="logo">
+            Market<span>Place</span>
+        </a>
 
-    {% for notification in notifications %}
+        <nav class="nav">
 
-        <div>
-
-            <p>
-                🔔
-                {{ notification.text }}
-            </p>
-
-            <small>
-                {{ notification.cr_at|date:"d.m.Y H:i" }}
-            </small>
-
-            <br>
-
-            <a href="{% url 'chat' notification.message.post.pk notification.sender.pk %}">
-                Открыть чат
+            <a href="{% url 'home' %}">
+                Главная
             </a>
+
+            <a href="{% url 'post_create' %}">
+                + Объявление
+            </a>
+
+            <a href="{% url 'favorite_list' %}">
+                ❤️ Избранное
+            </a>
+
+            <a href="{% url 'message_list' %}">
+                💬 Сообщения
+            </a>
+
+            <a href="{% url 'profile_detail' %}">
+                Профиль
+            </a>
+
+        </nav>
+
+    </div>
+</header>
+
+<main class="page">
+
+    <div class="container">
+
+        <div class="back-button">
+
+            <button
+                type="button"
+                class="button button-light"
+                onclick="if (document.referrer) { history.back(); } else { window.location.href='{% url 'home' %}'; }"
+            >
+                ← Назад
+            </button>
 
         </div>
 
-        <hr>
+        <div class="page-head">
 
-    {% empty %}
+            <div>
+                <h1>🔔 Уведомления</h1>
+                <p>Новые сообщения и события.</p>
+            </div>
 
-        <p>
-            У вас пока нет уведомлений.
-        </p>
+        </div>
 
-    {% endfor %}
+        {% for notification in notifications %}
 
+            <div class="notification {% if not notification.is_read %}unread{% endif %}">
 
-    <a href="{% url 'post_list' %}">
-        Вернуться к объявлениям
-    </a>
+                <div class="notification-text">
+                    🔔 {{ notification.text }}
+                </div>
+
+                <div class="notification-time">
+                    {{ notification.cr_at|date:"d.m.Y H:i" }}
+                </div>
+
+                <a
+                    href="{% url 'chat' notification.message.post.pk notification.sender.pk %}"
+                    class="button button-primary button-small"
+                >
+                    💬 Открыть чат
+                </a>
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty">
+
+                <h3>Уведомлений пока нет</h3>
+
+                <p>
+                    Здесь будут появляться уведомления о новых сообщениях.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</main>
 
 </body>
-
 </html>

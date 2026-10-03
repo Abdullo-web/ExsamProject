@@ -1,21 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Profile</title>
+    <title>Создание профиля — MarketPlace</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'marketplace/style.css' %}">
 </head>
 <body>
 
-    <h1>Create Profile</h1>
+<header class="site-header">
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+    <div class="container header-inner">
 
-        {{ form.as_p }}
+        <a href="{% url 'home' %}" class="logo">
+            Market<span>Place</span>
+        </a>
 
-        <button type="submit">Create Profile</button>
-    </form>
+        <nav class="nav">
+
+            <a href="{% url 'home' %}">
+                Главная
+            </a>
+
+            <a href="{% url 'logout' %}">
+                Выйти
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+<main class="page">
+
+    <div class="container">
+
+        <div class="card form-card">
+
+            <h1>Создайте свой профиль</h1>
+
+            <p>
+                Добавьте аватар, имя, телефон и немного информации о себе.
+            </p>
+
+            <form
+                method="post"
+                enctype="multipart/form-data"
+            >
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="button button-primary"
+                    >
+                        Создать профиль
+                    </button>
+
+                    <a
+                        href="{% url 'home' %}"
+                        class="button button-light"
+                    >
+                        Пока пропустить
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
 
 </body>
 </html>

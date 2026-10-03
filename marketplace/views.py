@@ -13,7 +13,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = 'marketplace/post_create.html'
-    success_url = reverse_lazy('post_list')
+    success_url = reverse_lazy('profile_detail')
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -85,7 +85,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
 class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'marketplace/post_delete.html'
-    success_url = reverse_lazy('post_list')
+    success_url = reverse_lazy('profile_detail')
 
     def get_queryset(self):
         return Post.objects.filter(owner=self.request.user)

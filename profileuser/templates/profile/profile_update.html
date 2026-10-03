@@ -1,19 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Update Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактировать профиль — MarketPlace</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'marketplace/style.css' %}">
 </head>
 <body>
 
-    <h1>Update Profile</h1>
+<header class="site-header">
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+    <div class="container header-inner">
 
-        {{ form.as_p }}
+        <a href="{% url 'home' %}" class="logo">
+            Market<span>Place</span>
+        </a>
 
-        <button type="submit">Update</button>
-    </form>
+        <nav class="nav">
+
+            <a href="{% url 'home' %}">
+                Главная
+            </a>
+
+            <a href="{% url 'profile_detail' %}">
+                Профиль
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+<main class="page">
+
+    <div class="container">
+
+        <div class="back-button">
+
+            <button
+                type="button"
+                class="button button-light"
+                onclick="if (document.referrer) { history.back(); } else { window.location.href='{% url 'profile_detail' %}'; }"
+            >
+                ← Назад
+            </button>
+
+        </div>
+
+        <div class="card form-card">
+
+            <h1>Редактировать профиль</h1>
+
+            <p>
+                Обновите информацию о себе.
+            </p>
+
+            <form
+                method="post"
+                enctype="multipart/form-data"
+            >
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="button button-primary"
+                    >
+                        Сохранить изменения
+                    </button>
+
+                    <a
+                        href="{% url 'profile_detail' %}"
+                        class="button button-light"
+                    >
+                        Отмена
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
 
 </body>
 </html>

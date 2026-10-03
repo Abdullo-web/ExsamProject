@@ -2,46 +2,189 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Избранное</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Избранное — MarketPlace</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'marketplace/style.css' %}">
 </head>
 <body>
 
-    <h1>Мои избранные объявления</h1>
+<header class="site-header">
+    <div class="container header-inner">
 
-    {% for favorite in favorites %}
-
-    <h2>
-        <a href="{% url 'post_detail' favorite.post.pk %}">
-            {{ favorite.post.title }}
+        <a href="{% url 'home' %}" class="logo">
+            Market<span>Place</span>
         </a>
-    </h2>
 
-    <p>Цена: {{ favorite.post.price }}</p>
+        <nav class="nav">
 
-    <p>Категория: {{ favorite.post.category.name }}</p>
+            <a href="{% url 'home' %}">
+                Главная
+            </a>
 
-    <p>Город: {{ favorite.post.city }}</p>
+            <a href="{% url 'post_create' %}">
+                + Объявление
+            </a>
 
-    <p>
-        Добавлено:
-        {{ favorite.cr_at|date:"d.m.Y H:i" }}
-    </p>
+            <a href="{% url 'message_list' %}">
+                💬 Сообщения
+            </a>
 
-    <form method="post" action="{% url 'favorite' favorite.post.pk %}">
-        {% csrf_token %}
+            <a href="{% url 'notification_list' %}">
+                🔔 Уведомления
+            </a>
 
-        <button type="submit">
-            💔 Убрать из избранного
-        </button>
-    </form>
+            <a href="{% url 'profile_detail' %}">
+                Профиль
+            </a>
 
-    <hr>
+        </nav>
 
-{% empty %}
+    </div>
+</header>
 
-    <p>У вас пока нет избранных объявлений.</p>
+<main class="page">
 
-{% endfor %}
+    <div class="container">
+
+        <div class="back-button">
+            <button
+                type="button"
+                class="button button-light"
+                onclick="if (document.referrer) { history.back(); } else { window.location.href='{% url 'home' %}'; }"
+            >
+                ← Назад
+            </button>
+        </div>
+
+        <div class="page-head">
+
+            <div>
+                <h1>❤️ Избранное</h1>
+                <p>Объявления, которые вы сохранили.</p>
+            </div>
+
+        </div>
+
+        {% if favorites %}
+
+            <div class="post-grid">
+
+                {% for favorite in favorites %}
+
+                    <article class="post-card">
+
+                        <a href="{% url 'post_detail' favorite.post.pk %}">
+
+                            <div class="post-image">
+
+                                {% if favorite.post.oblojka %}
+
+                                    <img
+                                        src="{{ favorite.post.oblojka.url }}"
+                                        alt="{{ favorite.post.title }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="post-placeholder">
+                                        Нет фото
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </a>
+
+                        <div class="post-content">
+
+                            <div class="post-top">
+
+                                <span class="category">
+                                    {{ favorite.post.category.name }}
+                                </span>
+
+                                <span class="meta">
+                                    {{ favorite.post.cr_at|date:"d.m.Y" }}
+                                </span>
+
+                            </div>
+
+                            <h3>
+                                <a href="{% url 'post_detail' favorite.post.pk %}">
+                                    {{ favorite.post.title }}
+                                </a>
+                            </h3>
+
+                            <div class="price">
+                                {{ favorite.post.price }} сом
+                            </div>
+
+                            <div class="post-info">
+
+                                <span>
+                                    📍 {{ favorite.post.city }}
+                                </span>
+
+                                <span>
+                                    @{{ favorite.post.owner.username }}
+                                </span>
+
+                            </div>
+
+                            <div class="post-actions">
+
+                                <form
+                                    method="post"
+                                    action="{% url 'favorite' favorite.post.pk %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="button button-light"
+                                    >
+                                        💔 Убрать
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty">
+
+                <h3>Избранное пока пустое</h3>
+
+                <p>
+                    Сохраняйте интересные объявления, чтобы быстро найти их позже.
+                </p>
+
+                <a
+                    href="{% url 'home' %}"
+                    class="button button-primary"
+                >
+                    Смотреть объявления
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</main>
 
 </body>
 </html>

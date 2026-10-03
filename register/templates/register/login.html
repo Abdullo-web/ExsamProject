@@ -1,19 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Вход — MarketPlace</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'marketplace/style.css' %}">
 </head>
 <body>
-    <h1>Login</h1>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
+<header class="site-header">
 
-<a href="{% url 'registeruser' %}"><button type="button">Back</button></a>
+    <div class="container header-inner">
+
+        <a href="{% url 'home' %}" class="logo">
+            Market<span>Place</span>
+        </a>
+
+        <nav class="nav">
+
+            <a href="{% url 'home' %}">
+                Главная
+            </a>
+
+            <a href="{% url 'registeruser' %}">
+                Регистрация
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+<main class="auth-page">
+
+    <div class="auth-card">
+
+        <h1>С возвращением 👋</h1>
+
+        <p>
+            Войдите в аккаунт, чтобы покупать и продавать товары.
+        </p>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">
+                Войти
+            </button>
+
+        </form>
+
+        <div class="auth-links">
+
+            Нет аккаунта?
+
+            <a href="{% url 'registeruser' %}">
+                Создать аккаунт
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
 </body>
 </html>

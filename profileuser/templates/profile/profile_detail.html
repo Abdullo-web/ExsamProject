@@ -1,77 +1,246 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile Details</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой профиль — MarketPlace</title>
+    <link rel="stylesheet" href="{% static 'marketplace/style.css' %}">
 </head>
 <body>
-<h1>Profile Details</h1> <br>
 
-<h1>{{ profile.nik_profile }}</h1> <br>
+<header class="site-header">
+    <div class="container header-inner">
 
-<p>Телефон: {{ profile.phone }}</p> <br>
+        <a href="{% url 'home' %}" class="logo">
+            Market<span>Place</span>
+        </a>
 
-<p>{{ profile.bio }}</p> <br>
+        <nav class="nav">
 
-{% if profile.avatar %}
-<a href="{{ profile.avatar.url }}" target="_blank">
-<img src="{{ profile.avatar.url }}"
-width="150"
-height="150"
-style="object-fit: cover; cursor: pointer;">
-</a>
-{% endif %} <br>
+            <a href="{% url 'home' %}" class="nav-link">
+                Главная
+            </a>
 
-<br>
-<!-- Отдельная кнопка создания поста -->
-<a href="{% url 'post_create' %}">
-<button type="button">Create Post</button>
-</a>
-<br><br>
+            <a href="{% url 'post_create' %}" class="nav-link">
+                + Объявление
+            </a>
 
-<a href="{% url 'home' %}"><button type="button">home Glavni</button></a>
+            <a href="{% url 'favorite_list' %}" class="nav-link">
+                ❤️ Избранное
+            </a>
 
-<form method="post" action="{% url 'logout' %}" style="display:inline;">
-{% csrf_token %}
-<button type="submit">Logout</button>
-</form>
+            <a href="{% url 'message_list' %}" class="nav-link">
+                💬 Сообщения
+            </a>
 
-<a href="{% url 'profile_update' %}"><button type="button">Update Profile</button></a>
+            <a href="{% url 'notification_list' %}" class="nav-link">
+                🔔 Уведомления
+            </a>
 
-<hr>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="nav-link">
+                    Выйти
+                </button>
+            </form>
 
-<h2>Мои посты</h2>
+        </nav>
 
-{% for post in user_posts %}
-<div>
-    {% if post.oblojka %}
-    <img src="{{ post.oblojka.url }}" width="100" alt="{{ post.title }}">
-    <br>
-    {% endif %}
+    </div>
+</header>
 
-    <h3>{{ post.title }}</h3>
-    <p>Цена: {{ post.price }}</p>
-    <p>Опубликовано: {{ post.cr_at|date:"d.m.Y H:i" }}</p>
+<main class="page">
+    <div class="container profile-layout">
 
-    <!-- Кнопки управления для каждого своего поста -->
-    <a href="{% url 'post_detail' post.pk %}">
-        <button type="button">Detail</button>
-    </a>
+        <button
+            type="button"
+            class="button button-light"
+            onclick="if (document.referrer) { history.back(); } else { window.location.href='{% url 'home' %}'; }"
+        >
+            ← Назад
+        </button>
 
-    <a href="{% url 'post_update' post.pk %}">
-        <button type="button">Update</button>
-    </a>
+        <section class="profile-header">
 
-    <a href="{% url 'post_delete' post.pk %}">
-        <button type="button">Delete</button>
-    </a>
+            <div class="avatar">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="{{ profile.nik_profile }}">
+                {% else %}
+                    {{ profile.nik_profile|first|upper }}
+                {% endif %}
+            </div>
 
-</div>
-<hr>
-{% empty %}
-<p>У вас пока нет постов.</p>
-{% endfor %}
+            <div class="profile-info">
+
+                <h1>{{ profile.nik_profile }}</h1>
+
+                <div class="profile-username">
+                    @{{ profile.owner.username }}
+                </div>
+
+                {% if profile.bio %}
+                    <div class="profile-bio">
+                        {{ profile.bio }}
+                    </div>
+                {% endif %}
+
+                <div class="profile-contact">
+                    📞 {{ profile.phone }}
+                </div>
+
+                <div class="profile-actions">
+
+                    <a href="tel:{{ profile.phone }}" class="button button-success">
+                        📞 Позвонить
+                    </a>
+
+                    <a href="{% url 'profile_update' %}" class="button button-light">
+                        ✏️ Редактировать профиль
+                    </a>
+
+                    <a href="{% url 'post_create' %}" class="button button-primary">
+                        + Создать объявление
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <div class="stats">
+
+            <div class="stat">
+                <strong>{{ user_posts.count }}</strong>
+                <span>Объявлений</span>
+            </div>
+
+            <div class="stat">
+                <strong>{{ profile.cr_at|date:"d.m.Y" }}</strong>
+                <span>На сайте с</span>
+            </div>
+
+        </div>
+
+        <h2 class="section-title">
+            Мои объявления
+        </h2>
+
+        {% if user_posts %}
+
+            <div class="post-grid">
+
+                {% for post in user_posts %}
+
+                    <article class="post-card">
+
+                        <a href="{% url 'post_detail' post.pk %}">
+
+                            <div class="post-image">
+
+                                {% if post.oblojka %}
+
+                                    <img
+                                        src="{{ post.oblojka.url }}"
+                                        alt="{{ post.title }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="post-placeholder">
+                                        Нет фото
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </a>
+
+                        <div class="post-content">
+
+                            <div class="post-top">
+
+                                <span class="category">
+                                    {{ post.category.name }}
+                                </span>
+
+                                <span class="meta">
+                                    {{ post.cr_at|date:"d.m.Y" }}
+                                </span>
+
+                            </div>
+
+                            <h3>
+                                <a href="{% url 'post_detail' post.pk %}">
+                                    {{ post.title }}
+                                </a>
+                            </h3>
+
+                            <div class="price">
+                                {{ post.price }} сом
+                            </div>
+
+                            <div class="post-info">
+                                <span>
+                                    📍 {{ post.city }}
+                                </span>
+                            </div>
+
+                            <div class="post-actions">
+
+                                <a
+                                    href="{% url 'post_detail' post.pk %}"
+                                    class="button button-light button-small"
+                                >
+                                    Открыть
+                                </a>
+
+                                <a
+                                    href="{% url 'post_update' post.pk %}"
+                                    class="button button-light button-small"
+                                >
+                                    ✏️ Изменить
+                                </a>
+
+                                <a
+                                    href="{% url 'post_delete' post.pk %}"
+                                    class="button button-danger button-small"
+                                >
+                                    🗑 Удалить
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty">
+
+                <h3>У вас пока нет объявлений</h3>
+
+                <p>
+                    Создайте первое объявление и начните продавать.
+                </p>
+
+                <a href="{% url 'post_create' %}" class="button button-primary">
+                    + Создать объявление
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+</main>
 
 </body>
 </html>
